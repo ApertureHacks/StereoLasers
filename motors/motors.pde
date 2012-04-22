@@ -1,26 +1,24 @@
-int motor1 = 3, motor2 = 5, upDown = 55, delta = 10, interval = 500;
-long previousMillis = 0;
+int motor1 = 3, motor2 = 5;
+long previousMillis = 0, interval = 15000;
 void setup(){
   pinMode(motor1, OUTPUT);
   pinMode(motor2, OUTPUT);
   Serial.begin(9600);
-  analogWrite(motor1, 75);
+  randomSeed(A2);
+  analogWrite(motor1, random(90, 120));
 }
 
 void loop(){
   unsigned long currentMillis = millis();
-  if(upDown > 100)delta=-10;
-  if(upDown < 55)delta=10;
-  int level = analogRead(A5);
-  if(level>255)level=255;
-  if(!level==0){
-    analogWrite(motor2, level);
-  } 
-  currentMillis = millis();
-  if(currentMillis-previousMillis>interval){
-    upDown += delta;
+  if(currentMillis - previousMillis > interval){
+    analogWrite(motor1, random(90, 120));
     previousMillis=currentMillis;
-    analogWrite(motor1, upDown);
   }
+  int level = analogRead(A5);
+  if(level > 255)level=255;
+  if(level > 3){
+    level = map(level, 0, 255, 90, 255);
+  }
+  analogWrite(motor2, level);
   Serial.println(level);
 }
